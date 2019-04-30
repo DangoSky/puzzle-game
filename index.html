@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.8/dist/vue.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <input type="file" accept="image/*" @change="changeFile" ref="file">  
+    <img :src="imgUrl" ref="image">
+    <div class="container" v-show="start">
+      <div class="debris" v-for="item in num" :data-debris="item" :style="{background: 'url(' + imgUrl + ')'}" ref="debris">
+        {{item}}
+      </div>
+    </div>
+    <select ref="select">
+      <option value="4">4</option>
+      <option value="9">9</option>
+      <option value="16">16</option>
+      <option value="25">25</option>
+    </select>
+    <button @click="confirmNum">确认</button>
+  </div>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        num: 0,
+        imgUrl: '',
+        imgWidth: 0,
+        imgHeight: 0,
+        start: false
+      },
+      methods: {
+        // 上传图片
+        changeFile() {
+          let reader = new FileReader();
+          let file = this.$refs.file;
+          let image = this.$refs.image;
+          reader.readAsDataURL(file.files[0]);
+          let _this = this;
+          reader.onload = function() {
+            _this.imgUrl = this.result;
+            image.src = this.result;
+          }
+        },
+        // 确定图片碎片的数量并显示
+        confirmNum() {
+          this.num = Number(this.$refs.select.value);
+          this.start = true;
+          this.$nextTick(()=>{
+            let image = this.$refs.image;
+            // 上传的图片的宽高
+            this.imgWidth = image.naturalWidth;
+            this.imgHeight = image.naturalHeight;
+            // 每个碎片的宽高
+            let debrisWidth = this.imgWidth / (this.num / 2);
+            let debrisHeight = this.imgHeight / (this.num / 2);
+            let arr = this.$refs.debris; 
+            let index = 0;
+            // 每一行每一列的碎片界定背景图的位置
+            for(let i=0, len=this.num/2; i<len; i++) {
+              for(let j=0; j<len; j++) {
+                arr[index].style.width = debrisWidth + 'px';
+                arr[index].style.height = debrisHeight + 'px';
+                arr[index++].style.backgroundPosition = `${debrisWidth * j}px ${debrisHeight * i}px`;
+              }
+            }
+            
+          })
+        },
+      }
+    })
+  </script>
+</body>
+</html>
