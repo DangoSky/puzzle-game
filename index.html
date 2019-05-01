@@ -6,15 +6,20 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.8/dist/vue.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
   <div id="app">
     <input type="file" accept="image/*" @change="changeFile" ref="file">  
     <img :src="imgUrl" ref="image">
-    <div class="container" v-show="start">
-      <div class="debris" v-for="item in num" :data-debris="item" :style="{background: 'url(' + imgUrl + ')'}" ref="debris">
-        {{item}}
+    <div class="container">
+      <div class="debris"
+        v-for="item in num" 
+        ref="debris"
+        :data-debris="item"
+        :style="{background: 'url(' + imgUrl + ')'}" 
+        @mousedown="move"
+      >
       </div>
     </div>
     <select ref="select">
@@ -30,10 +35,7 @@
       el: '#app',
       data: {
         num: 0,
-        imgUrl: '',
-        imgWidth: 0,
-        imgHeight: 0,
-        start: false
+        imgUrl: ''
       },
       methods: {
         // 上传图片
@@ -48,18 +50,21 @@
             image.src = this.result;
           }
         },
-        // 确定图片碎片的数量并显示
+        // 确定图片碎片的属性并显示
         confirmNum() {
-          this.num = Number(this.$refs.select.value);
+          if(this.imgUrl === '') {
+            return;
+          }
           this.start = true;
+          this.num = Number(this.$refs.select.value);
           this.$nextTick(()=>{
-            let image = this.$refs.image;
             // 上传的图片的宽高
-            this.imgWidth = image.naturalWidth;
-            this.imgHeight = image.naturalHeight;
-            // 每个碎片的宽高
-            let debrisWidth = this.imgWidth / (this.num / 2);
-            let debrisHeight = this.imgHeight / (this.num / 2);
+            let image = this.$refs.image;
+            let imgWidth = image.naturalWidth;
+            let imgHeight = image.naturalHeight;
+            // 计算每个碎片的宽高
+            let debrisWidth = imgWidth / (this.num / 2);
+            let debrisHeight = imgHeight / (this.num / 2);
             let arr = this.$refs.debris; 
             let index = 0;
             // 每一行每一列的碎片界定背景图的位置
@@ -70,9 +75,28 @@
                 arr[index++].style.backgroundPosition = `${debrisWidth * j}px ${debrisHeight * i}px`;
               }
             }
-            
           })
         },
+       // 拖拽
+        move(e) {
+          e = e || window.event;
+          let target = e.targe || e.srcElement;
+          let startX = e.clientX;
+          let startY = e.clientY;
+          let px = target.offsetLeft;
+          let py = target.offsetTop;
+          document.onmousemove = function(e) {
+            e = e || window.event;
+            let x = e.clientX - startX + px;
+            let y = e.clientY - startY + py;
+            target.style.left = `${x}px`;
+            target.style.top = `${y}px`;
+          };
+          document.onmouseup = () => {
+            document.onmousemove = null;
+            document.onmouseup = null;
+          };
+        }
       }
     })
   </script>
