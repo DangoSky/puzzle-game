@@ -13,12 +13,7 @@
     <div class="upload">
       <input type="file" accept="image/*" @change="changeFile" ref="file" class="upload-input">  
     </div>
-    <p class="select">请选择图片碎片的数量</p>
-    <ul>
-      <li v-for="item in debrisNum">
-        {{item}}
-      </li>
-    </ul>
+    <dangosky-select></dangosky-select>
     <!-- <select ref="select" placeholder="ding" class="select">
       <option value="" selected style="display: none">请选择图片碎片的数量</option>
       <option value="4">4</option>
@@ -40,12 +35,16 @@
     </div>
   </div>
   <script>
+    import select from './components/select.vue';
     var vm = new Vue({
       el: '#app',
       data: {
         num: 0,
         imgUrl: '',
         debrisNum: [4, 9, 16, 25]
+      },
+      components: {
+        'dangosky-select': select
       },
       methods: {
         // 上传图片

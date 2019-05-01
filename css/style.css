@@ -27,19 +27,7 @@ body {
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
 }
-.select {
-  background: rgb(216, 202, 202) url('../image//arrow.png') no-repeat center right;
-  padding-right: 30px;
-  border-radius: 10px;
-  /* color: white; */
-  /* border: 1px solid red; */
-  display: inline-block;
-  padding: 5px;
-}
-.option {
-  height: 20px;
-  font-size: 20px;
-}
+
 .debris {
   position: absolute;
 }
