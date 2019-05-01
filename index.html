@@ -10,8 +10,24 @@
 </head>
 <body>
   <div id="app">
-    <input type="file" accept="image/*" @change="changeFile" ref="file">  
-    <img :src="imgUrl" ref="image">
+    <div class="upload">
+      <input type="file" accept="image/*" @change="changeFile" ref="file" class="upload-input">  
+    </div>
+    <p class="select">请选择图片碎片的数量</p>
+    <ul>
+      <li v-for="item in debrisNum">
+        {{item}}
+      </li>
+    </ul>
+    <!-- <select ref="select" placeholder="ding" class="select">
+      <option value="" selected style="display: none">请选择图片碎片的数量</option>
+      <option value="4">4</option>
+      <option value="9">9</option>
+      <option value="16">16</option>
+      <option value="25">25</option>
+    </select> -->
+    <!-- <button @click="confirmNum">确认</button> -->
+    <img :src="imgUrl" ref="image" class="upload-image">
     <div class="container">
       <div class="debris"
         v-for="item in num" 
@@ -22,20 +38,14 @@
       >
       </div>
     </div>
-    <select ref="select">
-      <option value="4">4</option>
-      <option value="9">9</option>
-      <option value="16">16</option>
-      <option value="25">25</option>
-    </select>
-    <button @click="confirmNum">确认</button>
   </div>
   <script>
     var vm = new Vue({
       el: '#app',
       data: {
         num: 0,
-        imgUrl: ''
+        imgUrl: '',
+        debrisNum: [4, 9, 16, 25]
       },
       methods: {
         // 上传图片
@@ -57,6 +67,7 @@
           }
           this.start = true;
           this.num = Number(this.$refs.select.value);
+          // $refs不是响应式的，需要在$nextTick等DOM更新后才能获取到
           this.$nextTick(()=>{
             // 上传的图片的宽高
             let image = this.$refs.image;

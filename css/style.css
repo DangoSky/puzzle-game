@@ -1,3 +1,45 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  overflow: hidden;
+  background: url("../image/bg.jpg") no-repeat;
+  background-size: cover;
+}
+.upload {
+  width: 60px;
+  height: 60px;
+  background: url('../image/upload.png') no-repeat;
+  margin: 20px;
+}
+.upload-input {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  /* input 框这样设置才能使 cursor: pointer 生效*/
+  font-size: 0;
+}
+.upload-image {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+.select {
+  background: rgb(216, 202, 202) url('../image//arrow.png') no-repeat center right;
+  padding-right: 30px;
+  border-radius: 10px;
+  /* color: white; */
+  /* border: 1px solid red; */
+  display: inline-block;
+  padding: 5px;
+}
+.option {
+  height: 20px;
+  font-size: 20px;
+}
 .debris {
   position: absolute;
 }
