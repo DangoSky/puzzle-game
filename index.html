@@ -48,7 +48,9 @@
         imgWidth: 0,
         imgHeight: 0,
         browserW: 0,
-        browserH: 0
+        browserH: 0,
+        maxError: 10,   // 碎片之间的最大间隔值
+        success: false
       },
       mounted() {
         // 获取浏览器窗口的宽高
@@ -136,8 +138,58 @@
           document.onmouseup = () => {
             document.onmousemove = null;
             document.onmouseup = null;
+            this.judge();
           };
         },
+        // 判断是否拼图成功
+        judge() {
+          let index = 0;
+          let res = this.num;
+          for(let i=0, len=Math.sqrt(this.num); i<len; i++) {
+            for(let j=0; j<len; j++) {
+              // 如果有一个不满足则直接结束判断
+              let temp = this.judgePosition(i, j, index);
+              if(!temp) {
+                return;
+              }
+              index++;
+            }
+          }
+          if(success) {
+            alert("success");
+          }
+        },
+        judgePosition(i, j, index) {
+          let arr = this.$refs.debris;
+          let len = Math.sqrt(this.num);
+          let curDomRect = arr[index].getBoundingClientRect();
+          let dis;
+          // 判断和左边碎片的间隔
+          if(j - 1 >= 0) {
+            dis = Math.abs(curDomRect.left - arr[index-1].getBoundingClientRect().right);
+            console.log(dis);
+            if(dis > this.maxError)  return false;
+          }
+          // 判断和右边碎片的间隔
+          if(j + 1 < len) {
+            dis = Math.abs(curDomRect.right - arr[index+1].getBoundingClientRect().left);
+            console.log(dis);
+            if(dis > this.maxError)  return false;
+          }
+          // 判断和上边碎片的间隔
+          if(i - 1 >= 0) {
+            dis = Math.abs(curDomRect.top - arr[index-len].getBoundingClientRect().bottom);
+            console.log(dis);
+            if(dis > this.maxError)  return false;
+          }
+          // 判断和下边碎片的间隔
+          if(i + 1 < len) {
+            dis = Math.abs(curDomRect.bottom - arr[index+len].getBoundingClientRect().top);
+            console.log(dis);
+            if(dis > this.maxError)  return false;
+          }
+          this.success = true;
+        }
       }
     })
   </script>
