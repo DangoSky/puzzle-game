@@ -29,6 +29,7 @@ body {
 }
 .select {
   display: inline-block;
+  cursor: pointer;
 }
 .select-prompt {
   background: #DCDCDC url('../image/arrow.png') no-repeat calc(100% - 10px) center;
