@@ -28,10 +28,10 @@
         :key="index"
         ref="debris"
         v-show="showDebris"
-        :data-debris="index"
-        :style="{background: 'url(' + imgUrl + ')'}" 
+        :style="{backgroundImage: 'url(' + imgUrl + ')'}" 
         @mousedown="move"
       >
+      {{item}},{{index}}
       </div>
     </div>
   </div>
@@ -49,7 +49,7 @@
         imgHeight: 0,
         browserW: 0,
         browserH: 0,
-        maxError: 10,   // 碎片之间的最大间隔值
+        maxError: 3,   // 碎片之间的最大间隔值
         success: false
       },
       mounted() {
@@ -70,7 +70,7 @@
           let _this = this;
           reader.onload = function() {
             _this.imgUrl = this.result;
-            image.src = this.result;
+            image.src = _this.result;
             // 若图片过大则进行压缩
             setTimeout(() => {
               // 获取上传的图片的宽高
@@ -107,7 +107,7 @@
                 // 给每一个碎片设置宽高和背景图的位置
                 arr[index].style.width = debrisWidth + 'px';
                 arr[index].style.height = debrisHeight + 'px';
-                arr[index].style.backgroundPosition = `${debrisWidth * j}px ${debrisHeight * i}px`;
+                arr[index].style.backgroundPosition = `${-debrisWidth * j}px ${-debrisHeight * i}px`;
                 // 若图片经过了压缩则使用压缩后的图片大小，否则得到的碎片显示的区域有误
                 arr[index].style.backgroundSize = `${this.imgWidth}px ${this.imgHeight}px`;
                 // 给每一个碎片随机分配位置
@@ -141,7 +141,7 @@
             this.judge();
           };
         },
-        // 判断是否拼图成功
+        // 每次拖拽完成都判断拼图是否成功
         judge() {
           let index = 0;
           let res = this.num;
@@ -149,16 +149,18 @@
             for(let j=0; j<len; j++) {
               // 如果有一个不满足则直接结束判断
               let temp = this.judgePosition(i, j, index);
-              if(!temp) {
+              if(!temp)  {
+                this.success = false;
                 return;
               }
               index++;
             }
           }
-          if(success) {
+          if(this.success) {
             alert("success");
           }
         },
+        // 判断碎片和上下左右四个碎片的间隔是否不大于最大间隔
         judgePosition(i, j, index) {
           let arr = this.$refs.debris;
           let len = Math.sqrt(this.num);
@@ -167,28 +169,25 @@
           // 判断和左边碎片的间隔
           if(j - 1 >= 0) {
             dis = Math.abs(curDomRect.left - arr[index-1].getBoundingClientRect().right);
-            console.log(dis);
             if(dis > this.maxError)  return false;
           }
           // 判断和右边碎片的间隔
           if(j + 1 < len) {
             dis = Math.abs(curDomRect.right - arr[index+1].getBoundingClientRect().left);
-            console.log(dis);
             if(dis > this.maxError)  return false;
           }
           // 判断和上边碎片的间隔
           if(i - 1 >= 0) {
             dis = Math.abs(curDomRect.top - arr[index-len].getBoundingClientRect().bottom);
-            console.log(dis);
             if(dis > this.maxError)  return false;
           }
           // 判断和下边碎片的间隔
           if(i + 1 < len) {
             dis = Math.abs(curDomRect.bottom - arr[index+len].getBoundingClientRect().top);
-            console.log(dis);
             if(dis > this.maxError)  return false;
           }
           this.success = true;
+          return true;
         }
       }
     })

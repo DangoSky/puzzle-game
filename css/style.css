@@ -47,4 +47,5 @@ body {
 }
 .debris {
   position: absolute;
+  background-repeat: no-repeat;
 }
