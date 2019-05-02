@@ -27,7 +27,23 @@ body {
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
 }
-
+.select {
+  display: inline-block;
+}
+.select-prompt {
+  background: #DCDCDC url('../image/arrow.png') no-repeat calc(100% - 10px) center;
+  padding: 5px 40px 5px 5px;
+  user-select: none;
+  color: #808080;
+  font-size: 0.85rem;
+}
+.select-li {
+  background-color: #D3D3D3;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  line-height: 30px;
+  color: #808080;
+}
 .debris {
   position: absolute;
 }
