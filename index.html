@@ -21,7 +21,7 @@
         </li>
       </ul>
     </div>
-    <img :src="imgUrl" ref="image" class="upload-image" v-show="!showDebris">
+    <img :src="imgUrl" ref="image" :class="[success ? 'finish-upload-image' : 'init-upload-image']" v-show="!showDebris">
     <div class="container">
       <div class="debris"
         v-for="(item, index) in num"
@@ -31,7 +31,6 @@
         :style="{backgroundImage: 'url(' + imgUrl + ')'}" 
         @mousedown="move"
       >
-      {{item}},{{index}}
       </div>
     </div>
   </div>
@@ -49,7 +48,7 @@
         imgHeight: 0,
         browserW: 0,
         browserH: 0,
-        maxError: 3,   // 碎片之间的最大间隔值
+        maxError: 5,   // 碎片之间的最大间隔值
         success: false
       },
       mounted() {
@@ -69,18 +68,23 @@
           reader.readAsDataURL(file.files[0]);
           let _this = this;
           reader.onload = function() {
+            _this.success = false;
+            console.log(this.success);
             _this.imgUrl = this.result;
-            image.src = _this.result;
-            // 若图片过大则进行压缩
+            image.src = this.result;
+            let max_width = parseInt(_this.browserW * 0.5);
+            // 需要事先限制图片容器的最大宽度，否则压缩后会有一瞬间的图片从大到小的变化
+            image.style.maxWidth = max_width + 'px';
+            // 需要图片加载完成后才能获取到宽高
             setTimeout(() => {
               // 获取上传的图片的宽高
               _this.imgWidth = image.naturalWidth;
               _this.imgHeight = image.naturalHeight;
-              // 最大图片宽度设置为浏览器宽度的80%
-              let maxWidth = parseInt(_this.browserW * 0.5);
-              if(_this.imgWidth > maxWidth) {
-                _this.imgHeight = parseInt(maxWidth * _this.imgHeight / _this.imgWidth);
-                _this.imgWidth = maxWidth;
+              // 最大图片宽度设置为浏览器宽度的50%
+              // 若图片过大则进行压缩后再显示
+              if(_this.imgWidth > max_width) {
+                _this.imgHeight = parseInt(max_width * _this.imgHeight / _this.imgWidth);
+                _this.imgWidth = max_width;
                 image.style.width = _this.imgWidth + 'px';
                 image.style.height = _this.imgHeight + 'px';
               }
@@ -150,14 +154,18 @@
               // 如果有一个不满足则直接结束判断
               let temp = this.judgePosition(i, j, index);
               if(!temp)  {
-                this.success = false;
+                let image = this.$refs.image;
+                let arr = this.$refs.debris;
+                image.style.left = arr[0].getBoundingClientRect().left + 'px';
+                image.style.top = arr[0].getBoundingClientRect().top + 'px';
                 return;
               }
               index++;
             }
           }
           if(this.success) {
-            alert("success");
+            this.showDebris = false;
+            alert("You're successful!😊");
           }
         },
         // 判断碎片和上下左右四个碎片的间隔是否不大于最大间隔

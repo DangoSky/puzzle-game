@@ -21,11 +21,14 @@ body {
   /* input 框这样设置才能使 cursor: pointer 生效*/
   font-size: 0;
 }
-.upload-image {
+.init-upload-image {
   position: fixed;
-  left: 50%;
-  top: 50%;
+  left: 50% !important;
+  top: 50% !important;
   transform: translate3d(-50%, -50%, 0);
+}
+.finish-upload-image {
+  position: absolute;
 }
 .select {
   display: inline-block;
