@@ -11,7 +11,16 @@ body {
   width: 60px;
   height: 60px;
   background: url('../image/upload.png') no-repeat;
-  margin: 20px;
+  margin: 10px;
+}
+.prompt {
+  background: url('../image/prompt.png') no-repeat;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }
 .upload-input {
   opacity: 0;
@@ -29,6 +38,13 @@ body {
 }
 .finish-upload-image {
   position: absolute;
+  transform: scale(1.05, 1.05);
+}
+.prompt-upload-image {
+  position: absolute;
+  right: 0 !important;
+  top: 45px !important;
+  max-width: 20vw;
 }
 .select {
   display: inline-block;
