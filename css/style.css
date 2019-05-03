@@ -46,23 +46,17 @@ body {
   top: 45px !important;
   max-width: 20vw;
 }
-.select {
-  display: inline-block;
+.select-difficulty{
+  width: 25px;
+  height: 25px;
+  margin: 8px 0 0 5px;
   cursor: pointer;
 }
-.select-prompt {
-  background: #DCDCDC url('../image/arrow.png') no-repeat calc(100% - 10px) center;
-  padding: 5px 40px 5px 5px;
-  user-select: none;
-  color: #808080;
-  font-size: 0.85rem;
+.select-difficulty[data-star='0'] {
+  background: url('../image/star.png') no-repeat;
 }
-.select-li {
-  background-color: #D3D3D3;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-  line-height: 30px;
-  color: #808080;
+.select-difficulty[data-star='1'] {
+  background: url('../image/star1.png') no-repeat;
 }
 .debris {
   position: absolute;

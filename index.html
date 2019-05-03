@@ -16,14 +16,15 @@
     <div class="prompt" @mouseenter="showPrompt" @mouseleave="hidePrompt">
       <img :src="imgUrl" class="prompt-upload-image" v-show="showPromptImage">
     </div>
-    <div class="select" v-show="showSelect" @mouseleave="showSelectItem = false">
-      <p class="select-prompt" @click="showSelectItem = !showSelectItem">{{num}}</p>
-      <ul v-show="showSelectItem">
-        <li v-for="(item, index) in options" :key="index" class="select-li" @click="chooseNum(item)">
-          {{item}}
-        </li>
-      </ul>
-    </div>
+    <ul v-show="showSelect">
+      <li v-for="(item, index) in options" 
+        class="select-difficulty"
+        data-star="0"
+        ref="star"
+        @click="chooseDifficulty(index)"
+      >
+      </li>
+    </ul>
     <img :src="imgUrl" ref="image" :class="[success ? 'finish-upload-image' : 'init-upload-image']" v-show="!showDebris">
     <div class="container">
       <div class="debris"
@@ -44,9 +45,8 @@
         imgUrl: '',
         options: [4, 9, 16, 25],
         showSelect: false,
-        showSelectItem: false,
         showDebris: false,
-        num: '请选择碎片的数量',
+        num: 0,
         imgWidth: 0,
         imgHeight: 0,
         browserW: 0,
@@ -66,12 +66,13 @@
           let reader = new FileReader();
           let file = this.$refs.file;
           let image = this.$refs.image;
-          this.showSelect = true;
+
           this.showDebris = false;
-          this.num = '请选择碎片的数量';
+          this.num = 0;
           reader.readAsDataURL(file.files[0]);
           let _this = this;
           reader.onload = function() {
+            _this.showSelect = true;
             _this.success = false;
             _this.imgUrl = this.result;
             image.src = this.result;
@@ -92,12 +93,12 @@
           }
         },
         // 确定图片碎片的属性并显示
-        chooseNum(val) {
-          this.showSelectItem = false;
-          this.num = Number(val);
+        chooseDifficulty(val) {
           if(this.imgUrl === '') {
             return;
           }
+          this.num = Number(this.options[val]);
+          this.lightStar(val);
           this.showDebris = true;
           // $refs不是响应式的，需要在$nextTick等DOM更新后才能获取到
           this.$nextTick(()=>{
@@ -195,6 +196,7 @@
           this.success = true;
           return true;
         },
+        // 显示提示图片
         showPrompt() {
           if(this.showDebris) {
             this.showPromptImage = true;
@@ -202,6 +204,13 @@
         },
         hidePrompt() {  
           this.showPromptImage = false;
+        },
+        // 点亮星星
+        lightStar(index) {
+          let arr = this.$refs.star;
+          for(let i=0, len=this.options.length; i<len; i++) {
+            arr[i].dataset.star = i <= index ? '1' : '0';
+          }
         }
       }
     })
