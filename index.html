@@ -16,15 +16,21 @@
     <div class="prompt" @mouseenter="showPrompt" @mouseleave="hidePrompt">
       <img :src="imgUrl" class="prompt-upload-image" v-show="showPromptImage">
     </div>
-    <ul v-show="showSelect">
-      <li v-for="(item, index) in options" 
-        class="select-difficulty"
-        data-star="0"
-        ref="star"
-        @click="chooseDifficulty(index)"
+    <div>
+      <img src="./image/rect.png" class="select-button" 
+        v-show="showSelectButton" 
+        @click="showSelectItem = !showSelectItem"
       >
-      </li>
-    </ul>
+      <ul v-show="showSelectItem">
+        <li v-for="(item, index) in options" 
+          class="select-difficulty"
+          data-star="0"
+          ref="star"
+          @click="chooseDifficulty(index)"
+        >
+        </li>
+      </ul>
+    </div>
     <img :src="imgUrl" ref="image" :class="[success ? 'finish-upload-image' : 'init-upload-image']" v-show="!showDebris">
     <div class="container">
       <div class="debris"
@@ -43,8 +49,9 @@
       el: '#app',
       data: {
         imgUrl: '',
-        options: [4, 9, 16, 25],
-        showSelect: false,
+        options: [4, 9, 16, 25, 36, 49,64,81],
+        showSelectButton: false,
+        showSelectItem: false,
         showDebris: false,
         num: 0,
         imgWidth: 0,
@@ -72,7 +79,7 @@
           reader.readAsDataURL(file.files[0]);
           let _this = this;
           reader.onload = function() {
-            _this.showSelect = true;
+            _this.showSelectButton = true;
             _this.success = false;
             _this.imgUrl = this.result;
             image.src = this.result;
