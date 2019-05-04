@@ -53,7 +53,7 @@ body {
   position: relative;
   left: 10px;
 }
-.select-difficulty{
+.select-li{
   width: 25px;
   height: 25px;
   position: relative;
@@ -61,10 +61,10 @@ body {
   margin-top: 8px;
   cursor: pointer;
 }
-.select-difficulty[data-star='0'] {
+.select-li[data-star='0'] {
   background: url('../image/star.png') no-repeat;
 }
-.select-difficulty[data-star='1'] {
+.select-li[data-star='1'] {
   background: url('../image/star1.png') no-repeat;
 }
 .debris {

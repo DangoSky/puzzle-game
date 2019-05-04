@@ -23,7 +23,7 @@
       >
       <ul v-show="showSelectItem">
         <li v-for="(item, index) in options" 
-          class="select-difficulty"
+          class="select-li"
           data-star="0"
           ref="star"
           @click="chooseDifficulty(index)"
@@ -49,7 +49,7 @@
       el: '#app',
       data: {
         imgUrl: '',
-        options: [4, 9, 16, 25, 36, 49,64,81],
+        options: [4, 9, 16, 25, 36, 49, 64, 81],
         showSelectButton: false,
         showSelectItem: false,
         showDebris: false,
@@ -73,12 +73,13 @@
           let reader = new FileReader();
           let file = this.$refs.file;
           let image = this.$refs.image;
-
           this.showDebris = false;
           this.num = 0;
           reader.readAsDataURL(file.files[0]);
           let _this = this;
           reader.onload = function() {
+            // 重新开始后把所有星星熄灭
+            _this.lightStar(-1);
             _this.showSelectButton = true;
             _this.success = false;
             _this.imgUrl = this.result;
@@ -167,11 +168,13 @@
           }
           if(this.success) {
             this.showDebris = false;
-            alert("You're successful!🎉🎉🎉" + "\n" + "Use other photos to try again?" + "\n" + "Or choose more photo debris to increase the difficulty.");
             let image = this.$refs.image;
             let arr = this.$refs.debris;
             image.style.left = arr[0].getBoundingClientRect().left + 'px';
             image.style.top = arr[0].getBoundingClientRect().top + 'px';
+            setTimeout(() => {
+              alert("You're successful!🎉🎉🎉" + "\n" + "Use other photos to try again?" + "\n" + "Or choose more photo debris to increase the difficulty.");
+            }, 0)
           }
         },
         // 判断碎片和上下左右四个碎片的间隔是否不大于最大间隔
